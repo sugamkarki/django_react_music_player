@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import { useState } from "react";
+import axios from "axios";
 export default function CreateRoom() {
   const defaultVotes = 2;
   const [defaultState, setDefaultState] = useState({
@@ -30,9 +31,17 @@ export default function CreateRoom() {
       guestCanPause: e.target.value === "true" ? true : false,
     });
   };
-  const handleRoomButtonPressed=()=>{
-    console.log(defaultState)
-  }
+  const handleRoomButtonPressed = async () => {
+    console.log(defaultState);
+    const response = await axios.post(
+      "http://localhost:8000/api/create-room/",
+      {
+        guest_can_pause: defaultState.guestCanPause,
+        votes_to_skip: defaultState.votesToSkip,
+      }
+    );
+    console.log(response);
+  };
   return (
     <Grid container spacing={1}>
       <Grid item xs={12} align="center">
@@ -46,7 +55,11 @@ export default function CreateRoom() {
           {/* <FormHelperText>
             <div>Guest Control of Playback State</div>
           </FormHelperText> */}
-          <RadioGroup row defaultValue="true" onChange={handleGuestCanPauseChange}>
+          <RadioGroup
+            row
+            defaultValue="true"
+            onChange={handleGuestCanPauseChange}
+          >
             <FormControlLabel
               value="true"
               control={<Radio color="primary" />}
@@ -75,7 +88,11 @@ export default function CreateRoom() {
         </FormControl>
       </Grid>
       <Grid item xs={12} align="center">
-        <Button color="primary" variant="contained" onClick={handleRoomButtonPressed}>
+        <Button
+          color="primary"
+          variant="contained"
+          onClick={handleRoomButtonPressed}
+        >
           Create A Room
         </Button>
       </Grid>
