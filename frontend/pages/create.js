@@ -11,6 +11,8 @@ import {
   Button,
 } from "@mui/material";
 import Link from "next/link";
+import { useRouter } from "next/router";
+
 import { useState } from "react";
 import axios from "axios";
 export default function CreateRoom() {
@@ -18,8 +20,9 @@ export default function CreateRoom() {
   const [defaultState, setDefaultState] = useState({
     guestCanPause: true,
     votesToSkip: defaultVotes,
-    password:""
+    password: "",
   });
+  const router = useRouter();
   const handleVotesChange = (e) => {
     setDefaultState({
       ...defaultState,
@@ -32,12 +35,12 @@ export default function CreateRoom() {
       guestCanPause: e.target.value === "true" ? true : false,
     });
   };
-  const handlePasswordChange=(e)=>{
+  const handlePasswordChange = (e) => {
     setDefaultState({
-        ...defaultState,
-        password:e.target.value
-    })
-  }
+      ...defaultState,
+      password: e.target.value,
+    });
+  };
   const handleRoomButtonPressed = async () => {
     console.log(defaultState);
     const response = await axios.post(
@@ -45,9 +48,10 @@ export default function CreateRoom() {
       {
         guest_can_pause: defaultState.guestCanPause,
         votes_to_skip: defaultState.votesToSkip,
-        password:defaultState.password
+        password: defaultState.password,
       }
     );
+    router.push("/room/" + response.data.code);
     console.log(response);
   };
   return (
@@ -100,7 +104,7 @@ export default function CreateRoom() {
           <TextField
             required={true}
             type="text"
-            inputProps={{  style: { textAlign: "center" } }}
+            inputProps={{ style: { textAlign: "center" } }}
             onChange={handlePasswordChange}
           />
           <FormHelperText>{"Password"}</FormHelperText>
