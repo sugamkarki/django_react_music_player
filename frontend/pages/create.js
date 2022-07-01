@@ -18,6 +18,7 @@ export default function CreateRoom() {
   const [defaultState, setDefaultState] = useState({
     guestCanPause: true,
     votesToSkip: defaultVotes,
+    password:""
   });
   const handleVotesChange = (e) => {
     setDefaultState({
@@ -31,6 +32,12 @@ export default function CreateRoom() {
       guestCanPause: e.target.value === "true" ? true : false,
     });
   };
+  const handlePasswordChange=(e)=>{
+    setDefaultState({
+        ...defaultState,
+        password:e.target.value
+    })
+  }
   const handleRoomButtonPressed = async () => {
     console.log(defaultState);
     const response = await axios.post(
@@ -38,6 +45,7 @@ export default function CreateRoom() {
       {
         guest_can_pause: defaultState.guestCanPause,
         votes_to_skip: defaultState.votesToSkip,
+        password:defaultState.password
       }
     );
     console.log(response);
@@ -85,6 +93,17 @@ export default function CreateRoom() {
             onChange={handleVotesChange}
           />
           <FormHelperText>{"Votes Required To Skip Song"}</FormHelperText>
+        </FormControl>
+      </Grid>
+      <Grid item xs={12} align="center">
+        <FormControl>
+          <TextField
+            required={true}
+            type="text"
+            inputProps={{  style: { textAlign: "center" } }}
+            onChange={handlePasswordChange}
+          />
+          <FormHelperText>{"Password"}</FormHelperText>
         </FormControl>
       </Grid>
       <Grid item xs={12} align="center">
