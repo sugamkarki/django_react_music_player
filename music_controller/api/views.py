@@ -11,6 +11,25 @@ class RoomView(generics.ListAPIView):
     serializer_class = RoomSerializer
 
 
+class JoinRoom(APIView):
+    lookup_url_kwarg = 'code'
+
+    def post(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
+
+        code = request.data.get(self.lookup_url_kwarg)
+        if code != None:
+            room_result = Room.objects.filter(code=code)
+            if len(room_result) > 0:
+                room = room_result[0]
+                self.request.session['room_code'] = code
+                return Response({"message": "Room Joined!"}, status=status.HTTP_200_OK)
+            return Response({'BAD REQUEST': "Room Not Found"}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({'BAD REQUEST': "Code Parameter Not Found"}, status=status.HTTP_400_BAD_REQUEST)
+
+
 class GetRoom(APIView):
     serializer_class = RoomSerializer
     lookup_url_kwarg = 'code'

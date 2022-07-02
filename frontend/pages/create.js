@@ -55,7 +55,7 @@ export default function CreateRoom() {
     console.log(response);
   };
   return (
-    <Grid container spacing={1}>
+    <Grid container spacing={1} className={styles.center}>
       <Grid item xs={12} align="center">
         <Typography component="h4" variant="h4">
           Create a room
